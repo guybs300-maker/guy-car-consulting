@@ -1,10 +1,17 @@
 /**
  * Site behavior: mobile nav, smooth scroll, header state, scroll reveals,
- * subtle hero parallax, lead form → FormSubmit.
+ * subtle hero parallax, WhatsApp float, lead form → FormSubmit.
  */
 
 // === Owner config — change here if the contact email changes ===
 const GUY_EMAIL = "guybs300@gmail.com";
+
+// WhatsApp: international number, digits only (no + or spaces).
+// Leave as WHATSAPP_NUMBER_HERE to use the default 972543098966, or set e.g. "972501234567".
+const WHATSAPP_NUMBER = "WHATSAPP_NUMBER_HERE";
+
+const WHATSAPP_PREFILL_MESSAGE =
+  "היי גיא, הגעתי דרך האתר ואני מעוניין/ת בייעוץ לגבי רכישת רכב";
 
 (function () {
   const prefersReducedMotion = window.matchMedia(
@@ -33,6 +40,7 @@ const GUY_EMAIL = "guybs300@gmail.com";
   const headerOffset = header ? header.offsetHeight : 0;
 
   document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+    if (anchor.classList.contains("whatsapp-float")) return;
     const id = anchor.getAttribute("href");
     if (!id || id === "#") return;
 
@@ -48,6 +56,49 @@ const GUY_EMAIL = "guybs300@gmail.com";
       window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
     });
   });
+
+  /* WhatsApp floating button — URL + appear on scroll */
+  const waBtn = document.getElementById("whatsapp-float");
+  const WA_SCROLL_REVEAL = 140;
+
+  function resolveWhatsAppDigits() {
+    const raw = String(WHATSAPP_NUMBER || "").trim();
+    if (!raw || raw === "WHATSAPP_NUMBER_HERE") {
+      return "972543098966";
+    }
+    const digits = raw.replace(/\D/g, "");
+    return digits.length >= 10 ? digits : "972543098966";
+  }
+
+  function buildWhatsAppHref() {
+    const num = resolveWhatsAppDigits();
+    return (
+      "https://wa.me/" +
+      num +
+      "?text=" +
+      encodeURIComponent(WHATSAPP_PREFILL_MESSAGE)
+    );
+  }
+
+  function updateWhatsAppVisibility() {
+    if (!waBtn) return;
+    const show =
+      prefersReducedMotion || window.scrollY >= WA_SCROLL_REVEAL;
+    waBtn.classList.toggle("is-visible", show);
+  }
+
+  if (waBtn) {
+    waBtn.setAttribute("href", buildWhatsAppHref());
+
+    if (prefersReducedMotion) {
+      waBtn.classList.add("is-visible");
+    } else {
+      updateWhatsAppVisibility();
+      window.addEventListener("scroll", updateWhatsAppVisibility, {
+        passive: true,
+      });
+    }
+  }
 
   /* Floating header — stronger glass when scrolled */
   function onScrollHeader() {
@@ -121,7 +172,9 @@ const GUY_EMAIL = "guybs300@gmail.com";
   const statusEl = document.getElementById("form-status");
   const submitBtn = form ? form.querySelector(".btn-submit") : null;
 
-  if (!form || !statusEl) return;
+  if (!form || !statusEl) {
+    return;
+  }
 
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
