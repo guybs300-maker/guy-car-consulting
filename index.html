@@ -218,20 +218,25 @@
                 <textarea id="message" name="הודעה" rows="4"></textarea>
               </div>
               <div class="form-row form-row--consent">
-                <input
-                  type="checkbox"
-                  id="privacy_consent"
-                  name="אישור מדיניות פרטיות"
-                  value="כן"
-                  required
-                  class="form-consent-input"
-                />
-                <label for="privacy_consent" class="form-consent-label">
-                  אני מאשר/ת את שליחת הפרטים ומסכים/ה ל
-                  <a href="privacy-policy/" class="form-consent-link"
-                    >מדיניות הפרטיות</a
-                  >
-                </label>
+                <div class="form-consent-wrap">
+                  <input
+                    type="checkbox"
+                    id="privacy_consent"
+                    name="אישור מדיניות פרטיות"
+                    value="כן"
+                    required
+                    class="form-consent-input"
+                  />
+                  <label for="privacy_consent" class="form-consent-label">
+                    <span class="form-consent-label__text"
+                      >אני מאשר/ת את שליחת הפרטים ומסכים/ה ל־<a
+                        href="privacy-policy/"
+                        class="form-consent-link"
+                        >מדיניות הפרטיות</a
+                      ></span
+                    >
+                  </label>
+                </div>
               </div>
               <input
                 type="text"

@@ -837,41 +837,97 @@ body {
   user-select: none;
 }
 
-/* —— Form privacy consent —— */
+/* —— Form privacy consent (RTL grid, tight text + checkbox) —— */
 .form-row--consent {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.65rem;
   margin-bottom: 1.35rem;
 }
 
+.form-consent-wrap {
+  direction: rtl;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  column-gap: 0.65rem;
+  row-gap: 0.25rem;
+  padding: 0.85rem 1rem 0.9rem;
+  background: rgba(255, 252, 249, 0.72);
+  border: 1px solid var(--aqua-line-soft);
+  border-radius: var(--radius);
+  transition: border-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+}
+
+.form-consent-wrap:focus-within {
+  border-color: rgba(70, 118, 130, 0.28);
+  box-shadow: 0 0 0 3px rgba(70, 118, 130, 0.09);
+}
+
 .form-consent-input {
-  width: 1.15rem;
-  height: 1.15rem;
-  margin-top: 0.28rem;
+  grid-column: 1;
+  grid-row: 1;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin: 0;
+  margin-top: 0.32rem;
   flex-shrink: 0;
   accent-color: var(--aqua-accent);
   cursor: pointer;
+  align-self: start;
 }
 
 .form-consent-label {
-  font-size: 0.92rem;
-  line-height: 1.55;
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+  padding: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
   color: var(--ink-soft);
   font-weight: 500;
   cursor: pointer;
+  text-align: start;
+  text-wrap: pretty;
+}
+
+.form-consent-label__text {
+  display: inline;
 }
 
 .form-consent-link {
+  display: inline;
   color: var(--aqua-accent);
-  font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 1px;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(70, 118, 130, 0.35);
+  text-underline-offset: 2px;
+  transition: color 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
 }
 
 .form-consent-link:hover {
   color: var(--aqua-accent-muted);
+  border-bottom-color: var(--aqua-accent-muted);
+}
+
+.form-consent-link:focus-visible {
+  outline: 2px solid var(--aqua-accent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+@media (max-width: 480px) {
+  .form-consent-wrap {
+    padding: 0.75rem 0.85rem 0.8rem;
+    column-gap: 0.55rem;
+  }
+
+  .form-consent-label {
+    font-size: 0.9rem;
+    line-height: 1.58;
+  }
+
+  .form-consent-input {
+    margin-top: 0.28rem;
+  }
 }
 
 /* —— Legal inner pages —— */
