@@ -661,6 +661,126 @@ body {
   opacity: 0.75;
 }
 
+/* —— Buying importance (4 insight cards) —— */
+.buying-importance {
+  background: transparent;
+}
+
+.buying-importance__head {
+  max-width: 46rem;
+  margin-bottom: clamp(2.25rem, 5vw, 3.25rem);
+}
+
+.buying-importance__title {
+  margin-bottom: 1.35rem;
+}
+
+.buying-importance__intro p {
+  margin: 0 0 1.1rem;
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+.buying-importance__intro p:last-child {
+  margin-bottom: 0;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
+.insight-card-list {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 720px) {
+  .insight-card-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.35rem 1.5rem;
+  }
+}
+
+@media (min-width: 1100px) {
+  .insight-card-list {
+    gap: 1.5rem 1.75rem;
+  }
+}
+
+.insight-card {
+  padding: 1.6rem 1.45rem 1.65rem;
+  background: linear-gradient(
+    165deg,
+    var(--aqua-whisper) 0%,
+    var(--warm-white) 55%,
+    var(--aqua-card) 100%
+  );
+  border: 1px solid var(--aqua-line-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft), var(--shadow-aqua);
+  transition: border-color 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out),
+    transform 0.35s var(--ease-out);
+}
+
+.insight-card:hover {
+  border-color: var(--aqua-line);
+  box-shadow: var(--shadow-lift), 0 18px 44px rgba(70, 118, 130, 0.1);
+  transform: translateY(-3px);
+}
+
+.insight-card__title {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-display);
+  font-size: 1.22rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.insight-card__text {
+  margin: 0;
+  font-size: 0.97rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+/* —— Quote highlight (before contact) —— */
+.quote-highlight {
+  padding: clamp(2rem, 5vw, 3rem) 0;
+  background: transparent;
+}
+
+.quote-highlight__inner {
+  margin: 0;
+  padding: clamp(1.35rem, 3vw, 1.85rem) clamp(1.25rem, 3vw, 2rem);
+  background: linear-gradient(
+    135deg,
+    var(--aqua-card) 0%,
+    var(--aqua-tint) 45%,
+    var(--aqua-pale) 100%
+  );
+  border: 1px solid var(--aqua-line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft), var(--shadow-aqua);
+  border-inline-start: 4px solid var(--aqua-accent-muted);
+}
+
+.quote-highlight__inner p {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.4vw, 1.4rem);
+  font-weight: 500;
+  line-height: 1.55;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .insight-card:hover {
+    transform: none;
+  }
+}
+
 /* —— Contact —— */
 .contact {
   background: transparent;
