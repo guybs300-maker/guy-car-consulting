@@ -217,6 +217,22 @@
                 <label for="message">הודעה חופשית</label>
                 <textarea id="message" name="הודעה" rows="4"></textarea>
               </div>
+              <div class="form-row form-row--consent">
+                <input
+                  type="checkbox"
+                  id="privacy_consent"
+                  name="אישור מדיניות פרטיות"
+                  value="כן"
+                  required
+                  class="form-consent-input"
+                />
+                <label for="privacy_consent" class="form-consent-label">
+                  אני מאשר/ת את שליחת הפרטים ומסכים/ה ל
+                  <a href="privacy-policy/" class="form-consent-link"
+                    >מדיניות הפרטיות</a
+                  >
+                </label>
+              </div>
               <input
                 type="text"
                 name="_gotcha"
@@ -242,7 +258,12 @@
 
     <footer class="site-footer">
       <div class="container footer-inner">
-        <p>גיא בן שבת · ליווי וייעוץ בקניית רכב</p>
+        <p class="footer-tagline">גיא בן שבת · ליווי וייעוץ בקניית רכב</p>
+        <nav class="footer-legal" aria-label="קישורים משפטיים">
+          <a href="privacy-policy/">מדיניות פרטיות</a>
+          <span class="footer-legal-sep" aria-hidden="true">·</span>
+          <a href="accessibility/">הצהרת נגישות</a>
+        </nav>
       </div>
     </footer>
 
@@ -269,6 +290,33 @@
       </span>
       <span class="whatsapp-float__text">צרו איתי קשר בוואטסאפ</span>
     </a>
+
+    <div
+      id="cookie-consent"
+      class="cookie-consent"
+      role="dialog"
+      aria-modal="false"
+      aria-label="הסכמה לשימוש בעוגיות"
+      aria-describedby="cookie-consent-desc"
+      hidden
+    >
+      <div class="cookie-consent__panel">
+        <p id="cookie-consent-desc" class="cookie-consent__text">
+          האתר משתמש בקובצי Cookies לצורך שיפור חוויית המשתמש, מדידת ביצועים
+          ושיווק.
+        </p>
+        <div class="cookie-consent__actions">
+          <button
+            type="button"
+            class="cookie-consent__btn"
+            id="cookie-consent-accept"
+          >
+            אישור
+          </button>
+          <a href="privacy-policy/" class="cookie-consent__link">מידע נוסף</a>
+        </div>
+      </div>
+    </div>
 
     <script src="js/main.js"></script>
   </body>

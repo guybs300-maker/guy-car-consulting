@@ -13,6 +13,20 @@ const WHATSAPP_NUMBER = "WHATSAPP_NUMBER_HERE";
 const WHATSAPP_PREFILL_MESSAGE =
   "היי גיא, הגעתי דרך האתר ואני מעוניין/ת בייעוץ לגבי רכישת רכב";
 
+/**
+ * Marketing / analytics — placeholders only. Do not load scripts until legal
+ * review and cookie policy are aligned with actual tracking.
+ *
+ *   GOOGLE_ANALYTICS_ID  (e.g. G-XXXXXXXXXX)
+ *   META_PIXEL_ID        (Meta Pixel ID from Events Manager)
+ *
+ * Example (keep commented until ready):
+ *   // const GOOGLE_ANALYTICS_ID = "GOOGLE_ANALYTICS_ID";
+ *   // const META_PIXEL_ID = "META_PIXEL_ID";
+ *   // function loadGoogleAnalytics(id) { ... inject gtag ... }
+ *   // function loadMetaPixel(id) { ... inject fbq ... }
+ */
+
 (function () {
   const prefersReducedMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
@@ -172,69 +186,129 @@ const WHATSAPP_PREFILL_MESSAGE =
   const statusEl = document.getElementById("form-status");
   const submitBtn = form ? form.querySelector(".btn-submit") : null;
 
-  if (!form || !statusEl) {
-    return;
+  if (form && statusEl) {
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      statusEl.textContent = "";
+      statusEl.classList.remove("is-success", "is-error");
+
+      const consentEl = document.getElementById("privacy_consent");
+      if (consentEl && !consentEl.checked) {
+        statusEl.textContent =
+          "יש לאשר את מדיניות הפרטיות כדי לשלוח את הטופס.";
+        statusEl.classList.add("is-error");
+        consentEl.focus();
+        return;
+      }
+
+      if (!GUY_EMAIL) {
+        statusEl.textContent =
+          "חסרה כתובת אימייל בהגדרות. עדכנו את GUY_EMAIL בקובץ js/main.js.";
+        statusEl.classList.add("is-error");
+        return;
+      }
+
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(GUY_EMAIL)) {
+        statusEl.textContent = "כתובת האימייל בהגדרות אינה תקינה.";
+        statusEl.classList.add("is-error");
+        return;
+      }
+
+      const fd = new FormData(form);
+      fd.append("_subject", "פנייה חדשה מאתר — ליווי קניית רכב");
+      fd.append("_template", "table");
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "שולח…";
+      }
+
+      try {
+        const res = await fetch(
+          "https://formsubmit.co/ajax/" + encodeURIComponent(GUY_EMAIL),
+          {
+            method: "POST",
+            body: fd,
+            headers: { Accept: "application/json" },
+          }
+        );
+
+        const data = await res.json().catch(function () {
+          return {};
+        });
+
+        if (res.ok) {
+          statusEl.textContent =
+            "תודה! הפרטים נשלחו בהצלחה וגיא יחזור אליכם בקרוב.";
+          statusEl.classList.add("is-success");
+          form.reset();
+        } else {
+          throw new Error(data.message || "שגיאת שליחה");
+        }
+      } catch (err) {
+        statusEl.textContent =
+          "לא הצלחנו לשלוח את הטופס. נסו שוב או צרו קשר ישירות.";
+        statusEl.classList.add("is-error");
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "שליחה";
+        }
+      }
+    });
   }
 
-  form.addEventListener("submit", async function (e) {
-    e.preventDefault();
-    statusEl.textContent = "";
-    statusEl.classList.remove("is-success", "is-error");
+  /* Cookie consent — localStorage; marketing hooks after approval */
+  const COOKIE_CONSENT_KEY = "guy_bs_cookie_consent_v1";
 
-    if (!GUY_EMAIL) {
-      statusEl.textContent =
-        "חסרה כתובת אימייל בהגדרות. עדכנו את GUY_EMAIL בקובץ js/main.js.";
-      statusEl.classList.add("is-error");
-      return;
-    }
-
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(GUY_EMAIL)) {
-      statusEl.textContent = "כתובת האימייל בהגדרות אינה תקינה.";
-      statusEl.classList.add("is-error");
-      return;
-    }
-
-    const fd = new FormData(form);
-    fd.append("_subject", "פנייה חדשה מאתר — ליווי קניית רכב");
-    fd.append("_template", "table");
-
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = "שולח…";
-    }
-
+  function initMarketingAfterConsent() {
     try {
-      const res = await fetch(
-        "https://formsubmit.co/ajax/" + encodeURIComponent(GUY_EMAIL),
-        {
-          method: "POST",
-          body: fd,
-          headers: { Accept: "application/json" },
-        }
-      );
-
-      const data = await res.json().catch(function () {
-        return {};
-      });
-
-      if (res.ok) {
-        statusEl.textContent =
-          "תודה! הפרטים נשלחו בהצלחה וגיא יחזור אליכם בקרוב.";
-        statusEl.classList.add("is-success");
-        form.reset();
-      } else {
-        throw new Error(data.message || "שגיאת שליחה");
-      }
-    } catch (err) {
-      statusEl.textContent =
-        "לא הצלחנו לשלוח את הטופס. נסו שוב או צרו קשר ישירות.";
-      statusEl.classList.add("is-error");
-    } finally {
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "שליחה";
-      }
+      if (localStorage.getItem(COOKIE_CONSENT_KEY) !== "1") return;
+    } catch (e) {
+      return;
     }
-  });
+    // After replacing placeholders and loading vendor scripts, uncomment:
+    // const gaId = "GOOGLE_ANALYTICS_ID";
+    // loadGoogleAnalytics(gaId);
+    // const pixelId = "META_PIXEL_ID";
+    // loadMetaPixel(pixelId);
+  }
+
+  const cookieBanner = document.getElementById("cookie-consent");
+  const cookieAccept = document.getElementById("cookie-consent-accept");
+
+  var hasCookieConsent = false;
+  try {
+    hasCookieConsent = localStorage.getItem(COOKIE_CONSENT_KEY) === "1";
+  } catch (e) {
+    hasCookieConsent = false;
+  }
+
+  if (hasCookieConsent) {
+    initMarketingAfterConsent();
+    if (cookieBanner) cookieBanner.remove();
+  } else if (cookieBanner && cookieAccept) {
+    cookieBanner.removeAttribute("hidden");
+    cookieBanner.setAttribute("aria-hidden", "false");
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        cookieBanner.classList.add("cookie-consent--visible");
+      });
+    });
+    cookieAccept.addEventListener("click", function () {
+      try {
+        localStorage.setItem(COOKIE_CONSENT_KEY, "1");
+      } catch (err) {
+        /* blocked storage — banner still dismissed for this session */
+      }
+      cookieBanner.classList.remove("cookie-consent--visible");
+      cookieBanner.classList.add("cookie-consent--hiding");
+      cookieBanner.setAttribute("aria-hidden", "true");
+      window.setTimeout(function () {
+        cookieBanner.remove();
+        initMarketingAfterConsent();
+      }, 420);
+    });
+  }
 })();
