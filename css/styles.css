@@ -28,8 +28,9 @@
   --radius: 14px;
   --radius-lg: 24px;
   --radius-pill: 999px;
-  --font-display: "Frank Ruhl Libre", "Times New Roman", serif;
+  /* כותרות וגוף — Assistant (כמו טקסט המשנה בהירו) */
   --font-body: "Assistant", system-ui, sans-serif;
+  --font-display: var(--font-body);
   --header-gap: 5.75rem;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --duration: 0.65s;
